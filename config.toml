@@ -1,12 +1,16 @@
-baseURL = 'https://blog.bhaak.net/'
+baseURL = 'https://bhaak.net/blog/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
-theme = 'terminal'
-pagination.pagerSize = 5
+theme = 'roadster'
+# pagination.pagerSize = 5
 
-# Required for Chroma and the custom syntax highlighting.
-[markup.highlight]
-  noClasses = false
+# rendering HTML in Markdown
+[markup.goldmark.renderer]
+  unsafe = true
+
+[Params.style.vars]
+  foregroundColor = "#eeeeee"
+  backgroundColor = "#333333"
+  highlightColor = "#bb44bb"
 
 [params]
   author = 'bhaak'
@@ -63,13 +67,43 @@ pagination.pagerSize = 5
   # Example format, with date, time, and timezone abbreviation:
   # dateFormat = "2006-01-02 3:04:06 PM MST"
 
+[Params]
+  post_meta = ["author", "date", "categories", "translations"]
+
+
+[Params.sidebar]
+  home = "right"
+  list = "right"
+  single = "right"
+  # Enable widgets in given order
+  widgets = ["search", "recent", "categories", "taglist", "social"]
+
+[Params.widgets]
+  recent_num = 5 # Set the number of articles in the "Recent articles" widget
+  # categories_counter = false # Enable counter for each category in "Categories" widget
+  # tags_counter = false # Enable counter for each tag in "Tags" widget
+
+[Params.widgets.search]
+  url = "https://duckduckgo.com/"
+  [Params.widgets.search.input]
+    name = "sites"
+    pre = ""
+
+[Params.widgets.social]
+  # Enable parts of social widget
+  bluesky = "bhaak.bsky.social"
+  mastodon = "@bhaak"
+  twitter = "dingir_bhaak"
+  github = "bhaak"
+  email = "bhaak@gmx.net"
+
 [languages]
   [languages.en]
     languageName = "English"
     title = "Bhaak's Blog"
 
     [languages.en.params]
-      subtitle = "A simple, retro theme for Hugo"
+      subtitle = 'Dumping some ideas and code'
       owner = ""
       keywords = ""
       copyright = ""
