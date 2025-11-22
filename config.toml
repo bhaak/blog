@@ -70,6 +70,8 @@ theme = 'roadster'
 [Params]
   post_meta = ["author", "date", "categories", "translations"]
 
+[Params.customCSS]
+  relUrl = '/blog/css/custom.css'
 
 [Params.sidebar]
   home = "right"
