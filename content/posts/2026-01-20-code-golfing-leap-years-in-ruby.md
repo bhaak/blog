@@ -6,55 +6,63 @@ categories = ['Programming']
 tags = ['Ruby']
 +++
 
-My work buddy presented me with a code golfing challenge in Ruby.
+A work buddy challenged me to a bit of Ruby code golfing.
 
-> Write a program to print all the leap years from the year 1800 up to and
-> including 2400.
+> Write a program to print all leap years from 1800 up to and including 2400.
 
-The website (https://code.golf/leap-years#ruby) he got the challenge from has a
-neat feature where it can run the code for you and check if its output matches
-the desired result.
+The website he got the challenge from (https://code.golf/leap-years#ruby) has a
+neat feature: it can run your code and verify whether the output matches the
+expected result.
 
-I am usually not the greatest code golfer as I'd rather like to make code as
-performant as possible instead of making it as short and unreadable as possible
-but this was a fun little challenge which even turned out to be educational.
+I’m usually not much of a code golfer, I generally prefer writing code that’s
+performant and readable rather than short and cryptic, but this turned out to be
+a fun little challenge and even somewhat educational.
 
-I started with a simple but obviously straight forward implementation with 77 chars.
+I started with a simple, straightforward implementation at 77 characters:
+
 ```ruby
 (1800..2400).each { p _1 if _1 % 4 == 0 && (_1 % 100 != 0 || _1 % 400 == 0) }
 ```
 
-Eliminating whitespace and the modulo 4 test by only iterating over multiples of 4 (56 chars).
+Next, I eliminated whitespace and removed the modulo 4 check by iterating only
+over multiples of 4, bringing it down to 56 characters:
+
 ```ruby
 (1800..2400).step(4).each{p(_1)if(_1%100!=0||_1%400==0)}
 ```
 
-Shortening all numbers by dividing them by 4 and hardcoding the exceptions as
-an array (54 chars). I only later realized that if I had not used the hardcoded
-exceptions I would have had a much shorter solution.
+Then I shortened all numbers by dividing them by 4 and hard-coded the
+exceptions as an array, reaching 54 characters. I only realized later that
+skipping the hard-coded exceptions would have led to an even shorter solution.
+
 ```ruby
 (451..600).each{p(_1*4)if([475,525,550,575]&[_1])==[]}
 ```
 
-That was as far as I got when work buddy shared his solution (also 54 chars).
+That was as far as I got before my work buddy shared his solution (also 54 characters).
 
-His solution used the more concise `upto()` for iterating and a quite elaborate
-`if` condition using modulo testing with the shorter less-than operator instead
-of the equals operator.
+His approach used the more concise upto method for iteration and a fairly
+elaborate if condition, relying on modulo tests with the shorter less-than
+operator instead of equality checks:
+
 ```ruby
 1804.upto(2400){p(_1)if _1%4<1&&(_1%100<1?_1%400<1:0)}
 ```
 
-Combining his solution and mine gave a much shorter version (43 chars).
+Combining ideas from his solution and mine produced a much shorter version at
+43 characters:
+
 ```ruby
 451.upto(600){p(_1*4)if _1%25<1?_1%100<1:0}
 ```
 
-I was eventually able to shave off 1 char by improving the condition (42 chars).
+Eventually, I managed to shave off one more character by simplifying the
+condition, bringing it down to 42 characters:
+
 ```ruby
 451.upto(600){p(_1*4)if _1%25>0||_1%100<1}
 ```
 
-The record on the code.golf site is 33 characters. I assume this solution is
-using a completely different approach but I have no clue at all what this
-approach could be.
+The current record on the code.golf site is 33 characters. I assume that
+solution uses a completely different approach, but I have no idea what that
+approach might be.
