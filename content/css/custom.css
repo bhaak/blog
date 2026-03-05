@@ -1,3 +1,7 @@
+body {
+  font-size: unset;
+}
+
 body .container {
   max-width: 100em;
   box-shadow: 0px 0px 5px 1px var(--background-color);
@@ -22,5 +26,13 @@ header {
 }
 
 code {
-  border-radius: 2px;
+  border-radius: 0.2rem;
+  padding: 0.1rem 0.2rem 0.1rem 0.2rem
+}
+
+:root[data-theme="dark"] code {
+  background-color: color-mix(in srgb, var(--foreground-color) 66%, var(--background-color));
+}
+:root[data-theme="light"] code {
+  background-color: color-mix(in srgb, var(--foreground-color) 33%, var(--background-color));
 }
