@@ -19,7 +19,7 @@ tags = ['Ruby', 'RNG']
   }
 </style>
 
-While preparing to attach the electrical candles to the christmas tree,
+While preparing to attach the electrical candles to the Christmas tree,
 a question popped into my mind.
 
 There are electrical candles that simulate the flickering of real
@@ -46,7 +46,7 @@ loop {
 It uses a simple [linear congruential
 generator](https://en.wikipedia.org/wiki/Linear_congruential_generator)
 as random number generator with a period of 256. This period is already
-large enough for the repetition to be not noticeable for a human being.
+large enough for the repetition to be unnoticeable to a human being.
 
 But there were obvious improvements, like using a better color and smoothing
 the transition from one color to the next.
