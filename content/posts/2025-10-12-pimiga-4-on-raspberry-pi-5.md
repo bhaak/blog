@@ -27,7 +27,7 @@ partition of the Pimiga image, only preserving the cmdline.txt for booting the
 correct partition.
 
 Now the image boots but quickly runs into a blank screen. Accessing the machine
-by ssh shows an error message in /var/log/Xorg.0.log.
+via ssh shows an error message in `/var/log/Xorg.0.log`.
 ```text
 [    70.506] (EE) open /dev/fb0: No such file or directory
 [    70.506] (EE) No devices detected.
@@ -47,4 +47,7 @@ sudo apt update
 sudo apt upgrade
 ```
 
-Afterwards it finally boots into Pimiga. You still might to reduce the resolution of your display. The Raspberry Pi is not powerful enough to power a 4k display. FullHD (1920x1080) at 60hz is a resolution known to work well. 
+Afterwards, it finally boots into Pimiga.
+You still might need to reduce the resolution of your display.
+The Raspberry Pi is not powerful enough to drive a 4K display.
+Full HD (1920x1080) at 60Hz is a resolution known to work well.

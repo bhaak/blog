@@ -54,4 +54,4 @@ ActiveModel::RangeError: 2147483648 is out of range for ActiveModel::Type::Integ
 ```
 
 Even though Rails provides a clearer error message, both Rails and Postgres
-leave you guessing *which* column is too small.
+leave you guessing as to *which* column is too small.
