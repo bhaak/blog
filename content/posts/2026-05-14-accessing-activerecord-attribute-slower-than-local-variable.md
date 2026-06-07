@@ -9,14 +9,36 @@ categories = ["Programming"]
 I was deep in a performance optimization flow when I stumbled upon this part in
 [a ruby-prof graph](https://github.com/ruby-prof/ruby-prof):
 
-```text
-- 17.59% (73.45%) SomeTable::GeneratedAttributeMethods#some_attribute [30263106 calls, 44665545 total]
-  - 15.24% (86.62%) ActiveRecord::AttributeMethods::Read#_read_attribute [30263106 calls, 49437307 total]
-    - 11.82% (77.58%) ActiveModel::AttributeSet#fetch_value [30263106 calls, 49068748 total]
-      - 5.44% (46.06%) ActiveModel::AttributeSet#[] [30263106 calls, 49303667 total]
-        - 2.32% (42.58%) Hash#[] [30263106 calls, 72892138 total]
-      - 2.05% (17.36%) ActiveModel::Attribute#value [30263106 calls, 49274896 total]
-```
+<style>
+.prof {
+  .hot   { color: hsl(8,   80%, 65%); }
+  .warm  { color: hsl(30,  80%, 65%); }
+  .mid   { color: hsl(55,  80%, 65%); }
+  .cool  { color: hsl(100, 80%, 65%); }
+  .cold  { color: hsl(118, 80%, 65%); }
+  .method { color: hsl(205, 60%, 65%); }
+  .calls { color: hsl(95, 40%, 65%); }
+}
+
+:root[data-theme="light"] .prof {
+  .hot   { color: hsl(8,   70%, 42%); }
+  .warm  { color: hsl(28,  70%, 40%); }
+  .mid   { color: hsl(48,  65%, 36%); }
+  .cool  { color: hsl(100, 55%, 32%); }
+  .cold  { color: hsl(130, 50%, 30%); }
+  .method { color: hsl(221, 84%, 53%); }
+  .calls  { color: hsl(142, 86%, 36%); }
+}
+</style>
+
+<pre style='background: inherit' class='prof'>
+<code class="language-text" data-lang="text"><span class="cool">- 17.59%</span> <span class="hot">(73.45%)</span> <span class="method">SomeTable::GeneratedAttributeMethods#some_attribute</span> <span class="calls">[30263106 calls, 44665545 total]</span>
+<span class="cool">  - 15.24%</span> <span class="hot">(86.62%)</span> <span class="method">ActiveRecord::AttributeMethods::Read#_read_attribute</span> <span class="calls">[30263106 calls, 49437307 total]</span>
+<span class="cool">    - 11.82%</span> <span class="hot">(77.58%)</span> <span class="method">ActiveModel::AttributeSet#fetch_value</span> <span class="calls">[30263106 calls, 49068748 total]</span>
+<span class="cold">      - 5.44%</span> <span class="mid">(46.06%)</span> <span class="method">ActiveModel::AttributeSet#[]</span> <span class="calls">[30263106 calls, 49303667 total]</span>
+<span class="cold">        - 2.32%</span> <span class="mid">(42.58%)</span> <span class="method">Hash#[]</span> <span class="calls">[30263106 calls, 72892138 total]</span>
+<span class="cold">      - 2.05%</span> <span class="cool">(17.36%)</span> <span class="method">ActiveModel::Attribute#value</span> <span class="calls">[30263106 calls, 49274896 total]</span>
+</code></pre>
 
 ActiveRecord stores attributes internally in a hash, which is more expensive than I expected.
 
