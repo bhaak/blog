@@ -10,6 +10,9 @@ body .container {
 
 header {
   border-radius: 6px;
+
+  .logo__title {
+    font-size: 1.8rem;
 }
 
 .widget-search__form {

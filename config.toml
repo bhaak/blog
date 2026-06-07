@@ -102,10 +102,10 @@ theme = 'roadster'
 [languages]
   [languages.en]
     languageName = "English"
-    title = "Bhaak's Blog"
+    title = "Bhaak's Blog On Things That Were Supposed To Be Simple"
 
     [languages.en.params]
-      subtitle = 'Dumping some ideas and code'
+      subtitle = 'A space for ideas and code'
       owner = ""
       keywords = ""
       copyright = ""
@@ -120,7 +120,7 @@ theme = 'roadster'
       words = "words"
 
       [languages.en.params.logo]
-        logoText = "Bhaak's Blog"
+        logoText = "Bhaak's Blog On Things That Were Supposed To Be Simple"
         logoHomeLink = "/"
 
       # [languages.en.menu]
