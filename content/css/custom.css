@@ -13,6 +13,7 @@ header {
 
   .logo__title {
     font-size: 1.8rem;
+  }
 }
 
 .widget-search__form {
@@ -28,14 +29,35 @@ header {
   box-shadow: inset 0 0 1.1px 0px var(--background-color);
 }
 
-code {
-  border-radius: 0.2rem;
-  padding: 0.1rem 0.2rem 0.1rem 0.2rem
+pre {
+  border-width: 0px;
+  border-radius: 0.5rem;
+  scrollbar-color: var(--background-color) var(--foreground-color);
+  scrollbar-width: thin;
 }
 
-:root[data-theme="dark"] code {
-  background-color: color-mix(in srgb, var(--foreground-color) 66%, var(--background-color));
+:root[data-theme="dark"] pre {
+  background-color: black !important;
+  color: var(--foreground-color) !important;
 }
-:root[data-theme="light"] code {
-  background-color: color-mix(in srgb, var(--foreground-color) 33%, var(--background-color));
+:root[data-theme="light"] pre {
+  background-color: white !important;
+  color: var(--foreground-color) !important;
+}
+
+pre code {
+  border-radius: 0rem;
+  padding: 0rem;
+}
+
+code {
+  border-radius: 0.2rem;
+  padding: 0.1rem 0.15rem 0.1rem 0.15rem
+}
+
+:root[data-theme="dark"] pre:has(code) {
+  background-color: color-mix(in srgb, black 60%, var(--background-color)) !important;
+}
+:root[data-theme="light"] pre:has(code) {
+  background-color: color-mix(in srgb, white 75%, var(--background-color)) !important;
 }
