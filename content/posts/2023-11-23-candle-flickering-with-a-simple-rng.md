@@ -48,6 +48,66 @@ generator](https://en.wikipedia.org/wiki/Linear_congruential_generator)
 as random number generator with a period of 256. This period is already
 large enough for the repetition to be unnoticeable to a human being.
 
+Here is the same algorithm in the browser, drawing one grey frame every
+110 milliseconds. Click it to start and click it again to stop:
+
+<canvas id="grey-flicker" width="640" height="240" title="Click to start the flickering" style="display: block; width: 100%; max-width: 640px; margin-left: 2vw; cursor: pointer;"></canvas>
+<script>
+  (() => {
+    const canvas = document.getElementById("grey-flicker");
+    const ctx = canvas.getContext("2d");
+
+    let rnd = 0;
+    let running = false;
+    let timer = null;
+
+    function drawFrame() {
+      rnd = (rnd * 5 + 17) % 256;
+
+      // the terminal version paints the whole screen in one grey value
+      ctx.fillStyle = `rgb(${rnd},${rnd},${rnd})`;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      timer = setTimeout(drawFrame, 110);
+    }
+
+    // play symbol, drawn on top of the current frame while stopped
+    function drawPlaySymbol() {
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const size = 36;
+
+      ctx.beginPath();
+      ctx.moveTo(cx - size / 2, cy - size);
+      ctx.lineTo(cx + size, cy);
+      ctx.lineTo(cx - size / 2, cy + size);
+      ctx.closePath();
+      ctx.fillStyle = "rgb(238, 238, 238)";
+      ctx.fill();
+    }
+
+    function toggle() {
+      if (running) {
+        clearTimeout(timer);
+        running = false;
+        canvas.title = "Click to start the flickering";
+        drawPlaySymbol();
+      } else {
+        running = true;
+        canvas.title = "Click to stop the flickering";
+        drawFrame();
+      }
+    }
+
+    canvas.addEventListener("click", toggle);
+
+    // start out dark, ready for the first click
+    ctx.fillStyle = "rgb(0, 0, 0)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawPlaySymbol();
+  })();
+</script>
+
 But there were obvious improvements, like using a better color and smoothing
 the transition from one color to the next.
 
