@@ -16,6 +16,10 @@ cleaned-up version](https://github.com/fabiensanglard/DoomFirePSX/blob/master/fl
 I kept the basic algorithm intact and added controls for the cooling and wind.
 The palette is the one from the original implementation.
 
+Moving the cursor over the canvas drags a heat source around. Clicking the canvas
+plants a permanent hotspot that keeps feeding the fire; Reset clears both the fire
+and all hotspots.
+
 <style>
   #doom-fire {
     display: block;
@@ -24,6 +28,7 @@ The palette is the one from the original implementation.
     height: auto;
     background: #070707;
     image-rendering: pixelated;
+    cursor: crosshair;
   }
 
   #doom-fire-frame {
@@ -143,7 +148,7 @@ The palette is the one from the original implementation.
   </div>
 
   <div class="doom-fire-control">
-    <label for="doom-fire-mouse-size">Mouse heat size</label>
+    <label for="doom-fire-mouse-size">Heat size</label>
     <output id="doom-fire-mouse-size-value">2</output>
     <input id="doom-fire-mouse-size" type="range" min="1" max="20" step="1" value="2">
   </div>
@@ -170,6 +175,10 @@ The palette is the one from the original implementation.
     const width = canvas.width;
     const height = canvas.height;
     let mouseSource = null;
+
+    // Permanent heat sources planted by clicking. They are re-applied on every
+    // frame, so the fire keeps burning there until reset() removes them.
+    const hotspots = [];
 
     // Each entry contains a heat value from 0 to 36. The value is converted to
     // a colour only when the current frame is drawn.
@@ -211,7 +220,9 @@ The palette is the one from the original implementation.
     }
 
     // A white line at the bottom acts as the permanent source of heat.
+    // Hotspots are discarded too, so every run starts from the same state.
     function reset() {
+      hotspots.length = 0;
       pixels.fill(0);
       pixels.fill(36, (height - 1) * width);
     }
@@ -219,18 +230,52 @@ The palette is the one from the original implementation.
     // Convert the cursor position from the displayed canvas size to its
     // logical pixel coordinates. The canvas is responsive, so its bounding
     // rectangle can be larger than its actual 160 x 100 framebuffer.
-    function updateMouseSource(event) {
+    function canvasPosition(event) {
       const bounds = canvas.getBoundingClientRect();
-      mouseSource = {
+      return {
         x: Math.floor((event.clientX - bounds.left) / bounds.width * width),
         y: Math.floor((event.clientY - bounds.top) / bounds.height * height)
       };
     }
 
-    canvas.addEventListener("pointermove", updateMouseSource);
+    canvas.addEventListener("pointermove", (event) => {
+      mouseSource = canvasPosition(event);
+    });
     canvas.addEventListener("pointerleave", () => {
       mouseSource = null;
     });
+
+    // A click plants a permanent hotspot at the cursor position. The heat size
+    // is captured here, so hotspots keep the size they were created with.
+    // pointerdown is used instead of click because it also covers touch and pen.
+    canvas.addEventListener("pointerdown", (event) => {
+      const position = canvasPosition(event);
+      hotspots.push({
+        x: position.x,
+        y: position.y,
+        size: Number(mouseSize.value)
+      });
+    });
+
+    // Fill a circular area with maximum heat. The size describes the diameter,
+    // which keeps the mouse cursor and the hotspots consistent.
+    function injectHeat(sourceX, sourceY, size) {
+      const radius = size / 2;
+      const left = Math.max(0, Math.floor(sourceX - radius));
+      const right = Math.min(width - 1, Math.ceil(sourceX + radius));
+      const top = Math.max(0, Math.floor(sourceY - radius));
+      const bottom = Math.min(height - 1, Math.ceil(sourceY + radius));
+
+      for (let y = top; y <= bottom; y++) {
+        for (let x = left; x <= right; x++) {
+          const distanceX = x - sourceX;
+          const distanceY = y - sourceY;
+          if (distanceX * distanceX + distanceY * distanceY <= radius * radius) {
+            pixels[y * width + x] = 36;
+          }
+        }
+      }
+    }
 
     // Move one pixel's heat upward. The random offset changes its direction,
     // while cooling controls the chance of losing one heat level.
@@ -258,26 +303,15 @@ The palette is the one from the original implementation.
     }
 
     function draw() {
-      // The cursor is a second, temporary heat source. Its heat is injected
-      // before propagation, allowing a moving cursor to leave a flame trail.
+      // The cursor and the hotspots are temporary and permanent heat sources.
+      // Their heat is injected before propagation, allowing a moving cursor to
+      // leave a flame trail and hotspots to burn continuously.
       if (mouseSource) {
-        // The slider describes the diameter of a circular heat source.
-        const size = Number(mouseSize.value);
-        const radius = size / 2;
-        const left = Math.max(0, Math.floor(mouseSource.x - radius));
-        const right = Math.min(width - 1, Math.ceil(mouseSource.x + radius));
-        const top = Math.max(0, Math.floor(mouseSource.y - radius));
-        const bottom = Math.min(height - 1, Math.ceil(mouseSource.y + radius));
+        injectHeat(mouseSource.x, mouseSource.y, Number(mouseSize.value));
+      }
 
-        for (let y = top; y <= bottom; y++) {
-          for (let x = left; x <= right; x++) {
-            const distanceX = x - mouseSource.x;
-            const distanceY = y - mouseSource.y;
-            if (distanceX * distanceX + distanceY * distanceY <= radius * radius) {
-              pixels[y * width + x] = 36;
-            }
-          }
-        }
+      for (const hotspot of hotspots) {
+        injectHeat(hotspot.x, hotspot.y, hotspot.size);
       }
 
       // Process every row from the bottom upward. The bottom row is the heat
